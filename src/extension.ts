@@ -5,7 +5,7 @@ import { typeFootprint } from "./typeFootprint";
 
 export function activate(context: vscode.ExtensionContext) {
   // chat bot
-  registerChatParticipant();
+  registerChatParticipant(context);
   // commands
   const disposable = vscode.commands.registerCommand(
     "testdata-kun.generate",
@@ -95,10 +95,10 @@ async function executePrompt(typePrompt: string) {
   }
 }
 
-async function registerChatParticipant() {
+async function registerChatParticipant(context: vscode.ExtensionContext) {
   const handler: vscode.ChatRequestHandler = async (
     request: vscode.ChatRequest,
-    context: vscode.ChatContext,
+    handlerCtx: vscode.ChatContext,
     stream: vscode.ChatResponseStream,
     token: vscode.CancellationToken
   ) => {
@@ -109,7 +109,7 @@ async function registerChatParticipant() {
       });
 
       //history
-      const previousMessages = context.history.filter(
+      const previousMessages = handlerCtx.history.filter(
         h => h instanceof vscode.ChatRequestTurn
       );
       const prev = previousMessages.map(m =>
@@ -139,7 +139,11 @@ async function registerChatParticipant() {
     }
   };
 
-  const cat = vscode.chat.createChatParticipant("chat.testdata-kun", handler);
+  const chatbot = vscode.chat.createChatParticipant(
+    "chat.testdata-kun",
+    handler
+  );
+  chatbot.iconPath = vscode.Uri.joinPath(context.extensionUri, "icon.webp");
 }
 
 // This method is called when your extension is deactivated

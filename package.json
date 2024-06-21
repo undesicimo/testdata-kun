@@ -7,7 +7,11 @@
     "vscode": "^1.90.0"
   },
   "categories": [
-    "Other"
+    "AI",
+    "Chat"
+  ],
+  "enabledApiProposals": [
+    "chatVariableResolver"
   ],
   "activationEvents": [],
   "main": "./out/extension.js",
