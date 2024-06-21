@@ -1,8 +1,8 @@
 {
   "name": "testdata-kun",
   "displayName": "testdata-kun",
-  "description": "",
-  "version": "0.0.1",
+  "description": "Generate dummy data for TypeScript type declarations",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.90.0"
   },
@@ -22,7 +22,7 @@
       {
         "id": "chat.testdata-kun",
         "name": "testdata-kun",
-        "fullName": "Test data-kun",
+        "fullName": "Test Data-kun",
         "description": "Dummy data generation",
         "isSticky": true
       }

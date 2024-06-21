@@ -1,6 +1,6 @@
 import path from "path";
 import * as vscode from "vscode";
-import { main } from "./mainPrompts";
+import { generatePrompt, mainChatPrompt } from "./mainPrompts";
 import { typeFootprint } from "./typeFootprint";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -54,10 +54,7 @@ async function executePrompt(typePrompt: string) {
     vscode.window.showErrorMessage("No models available");
   }
   const messages = [
-    vscode.LanguageModelChatMessage.User(main),
-    vscode.LanguageModelChatMessage.User(
-      "only respond with the dummy data in the format that corresponds to the type declaration."
-    ),
+    vscode.LanguageModelChatMessage.User(generatePrompt),
     vscode.LanguageModelChatMessage.User(typePrompt),
   ];
 
@@ -84,6 +81,9 @@ async function executePrompt(typePrompt: string) {
     try {
       for await (const chunk of response.text) {
         text += chunk;
+      }
+      if (text.includes("Error")) {
+        throw new Error("Error");
       }
       //copy to clipboard
       await vscode.env.clipboard.writeText(text);
@@ -119,7 +119,7 @@ async function registerChatParticipant() {
       if (model) {
         const messages = [
           ...prev,
-          vscode.LanguageModelChatMessage.User(main),
+          vscode.LanguageModelChatMessage.User(mainChatPrompt),
           vscode.LanguageModelChatMessage.User(request.prompt),
         ];
 
