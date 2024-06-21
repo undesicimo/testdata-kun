@@ -1,3 +1,11 @@
+/**
+ * CREDITS TO @zaripych for the typeFootprint gist https://gist.github.com/zaripych
+ * https://gist.github.com/zaripych/963fa6584524e5b446b70548dbabbf65
+ * Any changes to this code should be proposed in the gist first
+ *
+ * TODO: support for interfaces
+ */
+
 import {
   Node,
   Project,
