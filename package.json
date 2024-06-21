@@ -14,8 +14,17 @@
   "contributes": {
     "commands": [
       {
-        "command": "testdata-kun.helloWorld",
-        "title": "Hello World"
+        "command": "testdata-kun.generate",
+        "title": "Generate dummy data"
+      }
+    ],
+    "chatParticipants": [
+      {
+        "id": "chat.testdata-kun",
+        "name": "testdata-kun",
+        "fullName": "Test data-kun",
+        "description": "Dummy data generation",
+        "isSticky": true
       }
     ]
   },

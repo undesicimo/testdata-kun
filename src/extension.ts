@@ -4,8 +4,11 @@ import { main } from "./mainPrompts";
 import { typeFootprint } from "./typeFootprint";
 
 export function activate(context: vscode.ExtensionContext) {
+  // chat bot
+  registerChatParticipant();
+  // commands
   const disposable = vscode.commands.registerCommand(
-    "testdata-kun.helloWorld",
+    "testdata-kun.generate",
     async () => {
       let workspaceFolder = vscode.workspace.workspaceFolders?.[0];
       let activeEditor = vscode.window.activeTextEditor;
@@ -52,6 +55,9 @@ async function executePrompt(typePrompt: string) {
   }
   const messages = [
     vscode.LanguageModelChatMessage.User(main),
+    vscode.LanguageModelChatMessage.User(
+      "only respond with the dummy data in the format that corresponds to the type declaration."
+    ),
     vscode.LanguageModelChatMessage.User(typePrompt),
   ];
 
@@ -87,6 +93,53 @@ async function executePrompt(typePrompt: string) {
       console.error(e);
     }
   }
+}
+
+async function registerChatParticipant() {
+  const handler: vscode.ChatRequestHandler = async (
+    request: vscode.ChatRequest,
+    context: vscode.ChatContext,
+    stream: vscode.ChatResponseStream,
+    token: vscode.CancellationToken
+  ) => {
+    try {
+      const [model] = await vscode.lm.selectChatModels({
+        vendor: "copilot",
+        family: "gpt-3.5-turbo",
+      });
+
+      //history
+      const previousMessages = context.history.filter(
+        h => h instanceof vscode.ChatRequestTurn
+      );
+      const prev = previousMessages.map(m =>
+        vscode.LanguageModelChatMessage.User(m.prompt)
+      );
+
+      if (model) {
+        const messages = [
+          ...prev,
+          vscode.LanguageModelChatMessage.User(main),
+          vscode.LanguageModelChatMessage.User(request.prompt),
+        ];
+
+        const chatResponse = await model.sendRequest(messages, {}, token);
+        for await (const fragment of chatResponse.text) {
+          stream.markdown(fragment);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      vscode.window.showErrorMessage(String(err));
+      if (err instanceof vscode.LanguageModelError) {
+        console.error(err.message, err.code, err.cause);
+      } else {
+        throw err;
+      }
+    }
+  };
+
+  const cat = vscode.chat.createChatParticipant("chat.testdata-kun", handler);
 }
 
 // This method is called when your extension is deactivated
