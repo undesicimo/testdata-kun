@@ -2,7 +2,7 @@
   "name": "testdata-kun",
   "displayName": "testdata-kun",
   "description": "Generate dummy data for TypeScript type declarations",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/undesicimo/testdata-kun"
