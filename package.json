@@ -3,7 +3,10 @@
   "displayName": "testdata-kun",
   "description": "Generate dummy data for TypeScript type declarations",
   "version": "1.0.0",
-  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/undesicimo/testdata-kun"
+  },
   "publisher": "josha0ngel03",
   "engines": {
     "vscode": "1.91.0"
